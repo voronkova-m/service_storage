@@ -1,0 +1,73 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Все продукты на складах</title>
+</head>
+<body>
+<%- include ('blocks/header.ejs') -%>
+<div class="block">
+    <p>Все продукты на складах:</p>
+    <% storages.forEach(function (storage) { %>
+        <p> Склад: <%=storage.name %> </p>
+        <% storage.idRacking.forEach(function (idRack) { %>
+        <table action="/rack/<%= idRack %>">
+            <p> Стеллаж с продуктами типа <%=storage.name %> </p>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Артикул</th>
+                <th>Тип</th>
+                <th>Наименование</th>
+                <th>Торговая марка</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <input type="text" name="article" value="<%= product.article %>" /><br><br>
+
+        </table>
+            <p> <%=.name %> </p>
+
+            <% }); %>
+    <% }); %>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Артикул</th>
+            <th>Тип</th>
+            <th>Наименование</th>
+            <th>Торговая марка</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% products.forEach(function(product) { %>
+            <tr>
+                <td><%= product._id %></td>
+                <td><%= product.article %></td>
+                <td><%= product.type %></td>
+                <td><%= product.name %></td>
+                <td> <%= product.trademark %></td>
+                <td>
+                    <form action="/edit_product/<%= product._id %>">
+                        <button type="submit">Изменить</button>
+                    </form>
+                </td>
+                <td>
+                <td>
+                    <form action="/delete_product/<%= product._id %>" method="post">
+                        <button type="submit">Удалить</button>
+                    </form>
+                </td>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
