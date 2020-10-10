@@ -1,0 +1,41 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Все продукты на складе</title>
+</head>
+<body>
+<%- include ('blocks/header.ejs') -%>
+<div class="block">
+    <p>Все продукты на складе <%= name %> </p>
+    <% racking.forEach(function(rack) { %>
+        <p>Все продукты на cтеллаже c типом <%= rack.typeRack %> </p>
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Артикул</th>
+                <th>Тип</th>
+                <th>Наименование</th>
+                <th>Торговая марка</th>
+                <th>Количество</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% rack.products.forEach(function(product) { %>
+                <tr>
+                    <td><%= product._id %></td>
+                    <td><%= product.article %></td>
+                    <td><%= product.type %></td>
+                    <td><%= product.name %></td>
+                    <td><%= product.trademark %></td>
+                    <td><%= product.countProduct %> </td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+
+    <% }); %>
+
+</div>
+</body>
+</html>

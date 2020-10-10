@@ -13,9 +13,17 @@ module.exports = function (app) {
             if (err){
                 res.render('error', {message: err.message});
                 return;
-            }
-            console.log(storages);
-            res.render('allProducts', {allStorage: storages});
+            } else {
+                try{
+                    Promise.all(storages.map((storage)=>  axios.get('http://127.0.0.1:4000/products_storage/' + storage._id)
+                    )).then(productsStorage => {
+                        res.render('allProducts', {storages: productsStorage.map(products => products.data)});
+                    });
+                } catch (e) {
+                    console.error(e);
+                    res.send(err.message);
+                }
+            };
         });
     });
 
@@ -27,8 +35,8 @@ module.exports = function (app) {
                     try{
                         Promise.all(storage.idRack.map((rack)=>  axios.get('http://127.0.0.1:4000/products_rack/' + rack._id)
                         )).then(productsStorage => {
-                            res.send(productsStorage.map(products => products.data)
-                            );
+                            //console.log(productsStorage.map(products => products.data));
+                            res.send({nameStorage: storage.name, rack:  productsStorage.map(products => products.data)});
                         });
                     } catch (e) {
                         console.error(e);
