@@ -6,12 +6,14 @@ var schema = new Schema({
         type: String,
         required: true
     },
-    idProducts: {
-        type: Array
-    },
-    countProducts: {
-        type: Array
-    }
-},{collection: 'raking'});
+    products: [
+        {
+            idProduct: mongoose.Schema.Types.ObjectId,
+            countProduct: {
+                type: Number,
+            }
+        }
+    ]
+}, {collection: 'raking'});
 
 exports.Rack = mongoose.model('Rack', schema);
