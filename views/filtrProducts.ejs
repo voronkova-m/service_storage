@@ -1,0 +1,29 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск продуктов</title>
+    <link rel='stylesheet' href='../static/css/style.css'>
+</head>
+<body>
+<%- include ('blocks/header.ejs') -%>
+<div class="block">
+    <p>Продукты по фильтру: <%= filters %></p>
+    <table>
+        <thead>
+        <tr><th>ID</th><th>Артикул</th><th>Тип</th><th>Наименование</th><th>Торговая марка</th></tr>
+        </thead>
+        <tbody>
+        <% products.forEach(function(product) { %>
+            <tr>
+                <td align="center"><%= product._id %></td>
+                <td align="center"><%= product.article %></td>
+                <td align="center"><%= product.type %></td>
+                <td align="center"><%= product.name %></td>
+                <td align="center"> <%= product.trademark %></td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

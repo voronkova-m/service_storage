@@ -37,7 +37,6 @@ module.exports = function (app) {
                 try {
                     Promise.all(storages.map((storage) => axios.get('http://127.0.0.1:4000/products_storage/' + storage._id)
                     )).then(productsStorage => {
-                        console.log('qwerttt ' + productsStorage.map(products => products.data));
                         res.send(productsStorage.map(products => products.data));
                     });
                 } catch (e) {
@@ -91,7 +90,6 @@ module.exports = function (app) {
                 request(url, function (error, res2) {
                     let productsRack = [];
                     let products = JSON.parse(res2.body);
-
                     products.forEach(function (product, i, products) {
                         productsRack[i] = product;
                         productsRack[i].countProduct = rack.products[i].countProduct;
@@ -114,15 +112,11 @@ module.exports = function (app) {
                     if (rack == undefined) {
                         res.render('error', {message: "Стеллажа с таким id нет"});
                     } else {
-                        rack.products.forEach(function (product, i, products) {
+                        rack.products.forEach(function (product) {
                             if (product.idProduct == idProduct) {
                                 Rack.updateOne(
-                                    {
-                                        "_id": idRack, "products.idProduct": product.idProduct
-                                    },
-                                    {
-                                        $inc: {"products.$.countProduct": 1}
-                                    }, function () {
+                                    {"_id": idRack, "products.idProduct": product.idProduct},
+                                    {$inc: {"products.$.countProduct": 1}}, function () {
                                         if (err) {
                                             res.render('error', {message: err.message});
                                             return;
@@ -180,4 +174,23 @@ module.exports = function (app) {
             }
         });
     });
+
+    app.get('/products_names/:values', function (req, res) {      // вовзращает продукты с введёнными значениями
+        let array = req.params.values.split(',');
+        const url = {
+            uri: 'http://127.0.0.1:3000/get_list_products_arr/',
+            body: JSON.stringify({arr: array}),
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        };
+        request(url, function (error, res2) {
+            let productsRack = [];
+            let products = JSON.parse(res2.body);
+            products.forEach(function (product, i, products) {
+                productsRack[i] = product;
+            });
+            res.render('filtrProducts', {products: productsRack, filters: array});
+        });
+    });
+
 };
