@@ -37,7 +37,6 @@ module.exports = function (app) {
                 try {
                     Promise.all(storages.map((storage) => axios.get('http://127.0.0.1:4000/products_storage/' + storage._id)
                     )).then(productsStorage => {
-                        //res.render('allProducts', {storages: productsStorage.map(products => products.data)});
                         console.log('qwerttt ' + productsStorage.map(products => products.data));
                         res.send(productsStorage.map(products => products.data));
                     });
@@ -58,7 +57,6 @@ module.exports = function (app) {
                 try {
                     Promise.all(storage.idRack.map((rack) => axios.get('http://127.0.0.1:4000/products_rack/' + rack._id)
                     )).then(productsStorage => {
-                        //console.log(productsStorage.map(products => products.data));
                         res.send({
                             idStorage: storage._id,
                             nameStorage: storage.name,
@@ -98,7 +96,6 @@ module.exports = function (app) {
                         productsRack[i] = product;
                         productsRack[i].countProduct = rack.products[i].countProduct;
                     });
-                    //res.render('rack', {typeRack: rack.type, products: productsRack});
                     res.send({idRack: rack._id, typeRack: rack.type, products: productsRack});
                 });
             }
@@ -183,34 +180,4 @@ module.exports = function (app) {
             }
         });
     });
-
-
-    app.get('/products_names/:names', function (req, res) {      // вовзращает продукты с введённым name
-        let array = req.params.names.split(',');
-        const url = {
-            uri: 'http://127.0.0.1:4000/all_products_js/',
-            body: JSON.stringify({arr: array}),
-            method: 'GET',
-            headers: {'Content-Type': 'application/json'}
-        };
-        request(url, function (error, res2) {
-            let productsRack = [];
-            console.log('fff ' + res2.body);
-            let products = JSON.parse(res2.body);
-            console.log('zzz ' + products);
-            products.forEach(function (product, i, products) {
-                productsRack[i] = product;
-                //productsRack[i].countProduct = rack.countProducts[i];
-            });
-            productsRack.find({$or: [{name: array}, {type: array}, {trademark: array}]}, function (err, products) {
-                if (products == undefined) {
-                    res.send(err.message);
-                } else {
-                    res.send(products);
-                }
-            });
-            res.send(productsRack);
-        });
-    });
-
 };
