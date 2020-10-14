@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title>Добавление продукта</title>
+    <meta charset="utf-8"/>
+    <link rel='stylesheet' href='../static/css/style.css'>
+</head>
+<body>
+<%- include ('blocks/header.ejs') -%>
+<h1>Добавить существующий продукт на стеллаж <%= typeRack %></h1>
+<tbody>
+<% products.forEach(function(product, i, products) { %>
+    <label class="container" > <%= product.name %>
+        <input type="checkbox" id=<% i %> >
+        <span class="checkmу"></span>
+    </label><br>
+<% }); %>
+</tbody>
+<form action="/add_old_product/" method="post"> // добавить отмеченные продукты
+    <button type="submit">Добавить</button>
+</form>
+
+<h1>Добавить новый продукт</h1>
+<form action="/add_new_product" method="post"> // создать продукт в каталоге и добавить на склад на стеллаж
+    <label>Артикул</label><br>
+    <input type="text" name="article"/><br><br>
+    <label>Тип</label><br>
+    <input type="text" name="type" readonly value="<%= typeRack %> " /><br><br>
+    <label>Наименование</label><br>
+    <input type="text" name="name"/><br><br>
+    <label>Торговая марка</label><br>
+    <input type="text" name="trademark"/><br><br>
+    <button type="submit"> Добавить</button>
+    <input hidden name="idRack" value="<%= idRack %>">
+</form>
+</body>
+</html>

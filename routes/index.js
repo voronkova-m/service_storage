@@ -100,7 +100,7 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/add_product/', function (req, res) {
+    app.post('/append_product/', function (req, res) {
         let idStorage = req.body['storage_id'];
         let idRack = req.body['rack_id'];
         let idProduct = req.body['product_id'];
@@ -131,7 +131,7 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/delete_product/', function (req, res) {
+    app.post('/reduce_product/', function (req, res) {
         let idStorage = req.body['storage_id'];
         let idRack = req.body['rack_id'];
         let idProduct = req.body['product_id'];
@@ -189,7 +189,8 @@ module.exports = function (app) {
             products.forEach(function (product, i, products) {
                 productsRack[i] = product;
             });
-            res.render('filtrProducts', {products: productsRack, filters: array});
+            //res.render('filtrProducts', {products: productsRack, filters: array});
+            res.send(productsRack);
         });
     });
 
@@ -214,11 +215,60 @@ module.exports = function (app) {
                 res.render('error', {message: err.message});
                 return;
             }
-            console.log(idStorage);
-            console.log(rack._id);
             Storage.updateOne({_id: idStorage}, {
                 $push: {
                     idRack: rack._id
+                }
+            }, function (err) {
+                if (err) {
+                    res.render('error', {message: err.message});
+                    return;
+                }
+                res.redirect("http://127.0.0.1:4000/all_products")
+            });
+        });
+    });
+
+    app.post('/add_product', function (req, res) {
+        let idRack = req.body['rack_id'];
+        let idStorage = req.body['storage_id'];
+        let typeRack = req.body['type_rack'];
+        request('http://127.0.0.1:4000/products_names/' + typeRack, function (err, res2, body) {
+            if (err) {
+                res2.render('error', {message: err.message});
+                return;
+            }
+            var products = body;
+            products = JSON.parse(products);
+            res.render('addProduct', {products: products, typeRack: typeRack, idRack: idRack, idStorage: idStorage});
+        });
+    });
+
+
+    app.post('/add_old_product', function (req, res) {
+        let chboxm = [];
+
+    });
+
+    app.post('/add_new_product', function (req, res) {
+        let article = req.body.article;
+        let type = req.body.type;
+        let name = req.body.name;
+        let trademark = req.body.trademark;
+        let idRack = req.body.idRack
+        const url = {
+            uri: 'http://127.0.0.1:3000/add_product_storage/',
+            body: JSON.stringify({article: article, type: type, name: name, trademark: trademark}),
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        };
+        request(url, function (error, res2) {
+            let productsRack = [];
+            let product = JSON.parse(res2.body);
+            product1 = {idProduct: product._id, countProduct: 1}
+            Rack.updateOne({_id: idRack}, {
+                $push: {
+                    products: product1
                 }
             }, function (err) {
                 if (err) {

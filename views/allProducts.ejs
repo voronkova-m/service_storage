@@ -12,18 +12,19 @@
         <input name="name_storage" placeholder="Введите название склада">
     </form>
     <% storages.forEach(function (storage) { %>
-        <p><b> Склад: <%= storage.nameStorage %> </b></p>
+        <br><br><p><b> Склад: <%= storage.nameStorage %> </b></p>
         <form action="/add_rack/" method="post">
             <button type="submit">Добавить стеллаж</button>
             <input name="type_rack" placeholder="Введите тип стеллажа">
             <input hidden name="storage_id" value="<%= storage.idStorage %>">
         </form>
         <% storage.rack.forEach(function (rack) { %>
-            <p><b> Стеллаж: <%= rack.typeRack %> </b></p>
+            <br><p><b> Стеллаж: <%= rack.typeRack %> </b></p>
             <form action="/add_product/" method="post">
                 <button type="submit">Добавить продукт</button>
                 <input hidden name="storage_id" value="<%= storage.idStorage %>">
                 <input hidden name="rack_id" value="<%= rack.idRack %>">
+                <input hidden name="type_rack" value="<%= rack.typeRack %>">
             </form>
             <table>
                 <thead>
@@ -48,7 +49,7 @@
                         <td><%= product.trademark %></td>
                         <td><%= product.countProduct %> </td>
                         <td>
-                            <form action="/add_product/" method="post">
+                            <form action="/append_product/" method="post">
                                 <button type="submit">+</button>
                                 <input hidden name="storage_id" value="<%= storage.idStorage %>">
                                 <input hidden name="rack_id" value="<%= rack.idRack %>">
@@ -56,7 +57,7 @@
                             </form>
                         </td>
                         <td>
-                            <form action="/delete_product/" method="post">
+                            <form action="/reduce_product/" method="post">
                                 <button type="submit">-</button>
                                 <input hidden name="storage_id" value="<%= storage.idStorage %>">
                                 <input hidden name="rack_id" value="<%= rack.idRack %>">
