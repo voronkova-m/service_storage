@@ -7,10 +7,24 @@
 <%- include ('blocks/header.ejs') -%>
 <div class="block">
     <p><b>Все продукты на складах:</b></p>
+    <form action="/add_storage/" method="post">
+        <button type="submit">Добавить склад</button>
+        <input name="name_storage" placeholder="Введите название склада">
+    </form>
     <% storages.forEach(function (storage) { %>
-        <p> <b> Склад: <%= storage.nameStorage %> </b></p>
+        <p><b> Склад: <%= storage.nameStorage %> </b></p>
+        <form action="/add_rack/" method="post">
+            <button type="submit">Добавить стеллаж</button>
+            <input name="type_rack" placeholder="Введите тип стеллажа">
+            <input hidden name="storage_id" value="<%= storage.idStorage %>">
+        </form>
         <% storage.rack.forEach(function (rack) { %>
-                <p> <b> Стеллаж: <%= rack.typeRack %> </b> </p>
+            <p><b> Стеллаж: <%= rack.typeRack %> </b></p>
+            <form action="/add_product/" method="post">
+                <button type="submit">Добавить продукт</button>
+                <input hidden name="storage_id" value="<%= storage.idStorage %>">
+                <input hidden name="rack_id" value="<%= rack.idRack %>">
+            </form>
             <table>
                 <thead>
                 <tr>
@@ -53,7 +67,7 @@
                 <% }); %>
                 </tbody>
             </table>
-        <% })}); %>
+    <% })}); %>
 </div>
 </body>
 </html>

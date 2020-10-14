@@ -7,9 +7,8 @@ var schema = new Schema({
         unique: true,
         required: true
     },
-    idRack: {
-        type: Array
-    }
+    idRack: Array
+
 },{collection: 'storages'});
 
 exports.Storage = mongoose.model('Storage', schema);

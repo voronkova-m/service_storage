@@ -193,4 +193,41 @@ module.exports = function (app) {
         });
     });
 
+    app.post('/add_storage', function (req, res) {
+        let nameStorage = req.body['name_storage'];
+        var newStorage = new Storage({name: nameStorage, idRack: []});
+        newStorage.save(function (err) {
+            if (err) {
+                res.render('error', {message: err.message});
+                return;
+            }
+            res.redirect("http://127.0.0.1:4000/all_products")
+        });
+    });
+
+    app.post('/add_rack', function (req, res) {
+        let typeRack = req.body['type_rack'];
+        let idStorage = req.body['storage_id'];
+        var newRack = new Rack({type: typeRack, products: []});
+        newRack.save(function (err, rack) {
+            if (err) {
+                res.render('error', {message: err.message});
+                return;
+            }
+            console.log(idStorage);
+            console.log(rack._id);
+            Storage.updateOne({_id: idStorage}, {
+                $push: {
+                    idRack: rack._id
+                }
+            }, function (err) {
+                if (err) {
+                    res.render('error', {message: err.message});
+                    return;
+                }
+                res.redirect("http://127.0.0.1:4000/all_products")
+            });
+        });
+    });
+
 };
