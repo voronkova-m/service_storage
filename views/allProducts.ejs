@@ -13,6 +13,10 @@
     </form>
     <% storages.forEach(function (storage) { %>
         <br><br><p><b> Склад: <%= storage.nameStorage %> </b></p>
+        <form action="/delete_storage/" method="post">
+            <button type="submit">Удалить склад</button>
+            <input hidden name="storage_id" value="<%= storage.idStorage %>">
+        </form>
         <form action="/add_rack/" method="post">
             <button type="submit">Добавить стеллаж</button>
             <input name="type_rack" placeholder="Введите тип стеллажа">
@@ -20,6 +24,11 @@
         </form>
         <% storage.rack.forEach(function (rack) { %>
             <br><p><b> Стеллаж: <%= rack.typeRack %> </b></p>
+            <form action="/delete_rack/" method="post">
+                <button type="submit">Удалить стеллаж</button>
+                <input hidden name="rack_id" value="<%= rack.idRack %>">
+                <input hidden name="storage_id" value="<%= storage.idStorage %>">
+            </form>
             <form action="/add_product/" method="post">
                 <button type="submit">Добавить продукт</button>
                 <input hidden name="storage_id" value="<%= storage.idStorage %>">

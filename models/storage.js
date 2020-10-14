@@ -7,7 +7,9 @@ var schema = new Schema({
         unique: true,
         required: true
     },
-    idRack: Array
+    idRack: {
+        type: Array
+    }
 
 },{collection: 'storages'});
 

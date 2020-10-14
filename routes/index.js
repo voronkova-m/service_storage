@@ -229,6 +229,45 @@ module.exports = function (app) {
         });
     });
 
+    app.post('/delete_rack', function (req, res) {
+        let idRack = req.body['rack_id'];
+        let idStorage = req.body['storage_id'];
+        console.log('vvv' + idRack);
+        Storage.updateOne({_id: idStorage, "idRack": idRack}, {$pop: {"idRack": 1}}
+            , function (err) {
+                if (err) {
+                    res.render('error', {message: err.message});
+                    return;
+                } else {
+                    console.log('zzz' + idRack);
+                    Rack.remove({"_id": idRack}, function (err) {
+                        if (err) {
+                            res.render('error', {message: err.message});
+                            console.log(err.message);
+                            return;
+                        } else {
+                            console.log('aaa' + idRack);
+                            res.redirect("http://127.0.0.1:4000/all_products")
+                        }
+                    });
+                }
+            });
+    });
+
+
+    app.post('/delete_storage', function (req, res) {
+        let idStorage = req.body['storage_id'];
+        console.log('vvv' + idStorage);
+        Storage.remove({_id: idStorage}, function (err) {
+            if (err) {
+                res.render('error', {message: err.message});
+                console.log(err.message);
+                return;
+            }
+            res.redirect("http://127.0.0.1:4000/all_products")
+        });
+    });
+
     app.post('/add_product', function (req, res) {
         let idRack = req.body['rack_id'];
         let idStorage = req.body['storage_id'];
@@ -240,10 +279,14 @@ module.exports = function (app) {
             }
             var products = body;
             products = JSON.parse(products);
-            res.render('addProduct', {products: products, typeRack: typeRack, idRack: idRack, idStorage: idStorage});
+            res.render('addProduct', {
+                products: products,
+                typeRack: typeRack,
+                idRack: idRack,
+                idStorage: idStorage
+            });
         });
     });
-
 
     app.post('/add_old_product', function (req, res) {
         let chboxm = [];
@@ -279,5 +322,4 @@ module.exports = function (app) {
             });
         });
     });
-
 };
