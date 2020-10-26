@@ -257,7 +257,7 @@ module.exports = function (app) {
 
     app.post('/delete_storage', function (req, res) {
         let idStorage = req.body['storage_id'];
-        console.log('vvv' + idStorage);
+        console.log('vvv' + idRack);
         Storage.remove({_id: idStorage}, function (err) {
             if (err) {
                 res.render('error', {message: err.message});
@@ -288,9 +288,23 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/add_old_product', function (req, res) {
-        let chboxm = [];
-
+    app.post('/rack/:id/add_old_product', function (req, res) {
+        let chbox = req.body;
+        let idRack = req.params.id;
+        //let typeRack = req.body['type_rack'];
+        Object.keys(chbox).forEach(function (product) {
+            Rack.updateOne({_id: idRack}, {
+                $push: {
+                    products: {idProduct: product, countProduct: 1}
+                }
+            }, function (err) {
+                if (err) {
+                    res.render('error', {message: err.message});
+                    return;
+                }
+                res.redirect("http://127.0.0.1:4000/all_products")
+            });
+        })
     });
 
     app.post('/add_new_product', function (req, res) {

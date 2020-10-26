@@ -6,16 +6,14 @@
 </head>
 <body>
 <%- include ('blocks/header.ejs') -%>
-<h1>Добавить существующий продукт на стеллаж <%= typeRack %></h1>
-<tbody>
-<% products.forEach(function(product, i, products) { %>
-    <label class="container" > <%= product.name %>
-        <input type="checkbox" id=<% i %> >
-        <span class="checkmу"></span>
-    </label><br>
-<% }); %>
-</tbody>
-<form action="/add_old_product/" method="post"> // добавить отмеченные продукты
+<form action="/rack/<%= idRack %>/add_old_product/" method="post"> // добавить отмеченные продукты
+    <h1>Добавить существующий продукт на стеллаж <%= typeRack %></h1>
+    <% products.forEach(function(product, i, products) { %>
+        <label class="container" > <%= product.name %>
+            <input type="checkbox" name=<%= product._id %>  >
+            <span class="checkmу"></span>
+        </label><br>
+    <% }); %>
     <button type="submit">Добавить</button>
 </form>
 
