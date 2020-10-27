@@ -7,29 +7,29 @@
 <%- include ('blocks/header.ejs') -%>
 <div class="block">
     <p><b>Все продукты на складах:</b></p>
-    <form action="/add_storage/" method="post">
+    <form action="/add-storage/" method="post">
         <button type="submit">Добавить склад</button>
         <input name="name_storage" placeholder="Введите название склада">
     </form>
     <% storages.forEach(function (storage) { %>
         <br><br><p><b> Склад: <%= storage.nameStorage %> </b></p>
-        <form action="/delete_storage/" method="post">
+        <form action="/delete-storage/" method="post">
             <button type="submit">Удалить склад</button>
             <input hidden name="storage_id" value="<%= storage.idStorage %>">
         </form>
-        <form action="/add_rack/" method="post">
+        <form action="/add-rack/" method="post">
             <button type="submit">Добавить стеллаж</button>
             <input name="type_rack" placeholder="Введите тип стеллажа">
             <input hidden name="storage_id" value="<%= storage.idStorage %>">
         </form>
         <% storage.rack.forEach(function (rack) { %>
             <br><p><b> Стеллаж: <%= rack.typeRack %> </b></p>
-            <form action="/delete_rack/" method="post">
+            <form action="/delete-rack/" method="post">
                 <button type="submit">Удалить стеллаж</button>
                 <input hidden name="rack_id" value="<%= rack.idRack %>">
                 <input hidden name="storage_id" value="<%= storage.idStorage %>">
             </form>
-            <form action="/add_product/" method="post">
+            <form action="/add-product/" method="post">
                 <button type="submit">Добавить продукт</button>
                 <input hidden name="storage_id" value="<%= storage.idStorage %>">
                 <input hidden name="rack_id" value="<%= rack.idRack %>">
@@ -58,7 +58,7 @@
                         <td><%= product.trademark %></td>
                         <td><%= product.countProduct %> </td>
                         <td>
-                            <form action="/append_product/" method="post">
+                            <form action="/append-product/" method="post">
                                 <button type="submit">+</button>
                                 <input hidden name="storage_id" value="<%= storage.idStorage %>">
                                 <input hidden name="rack_id" value="<%= rack.idRack %>">
@@ -66,7 +66,7 @@
                             </form>
                         </td>
                         <td>
-                            <form action="/reduce_product/" method="post">
+                            <form action="/reduce-product/" method="post">
                                 <button type="submit">-</button>
                                 <input hidden name="storage_id" value="<%= storage.idStorage %>">
                                 <input hidden name="rack_id" value="<%= rack.idRack %>">

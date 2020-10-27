@@ -8,14 +8,14 @@ module.exports = function (app) {
         res.render('index');
     });
 
-    app.get('/all_products', function (req, res) {
+    app.get('/all-products', function (req, res) {
         Storage.find({}, function (err, storages) {
             if (err) {
                 res.render('error', {message: err.message});
                 return;
             } else {
                 try {
-                    Promise.all(storages.map((storage) => axios.get('http://127.0.0.1:4000/products_storage/' + storage._id)
+                    Promise.all(storages.map((storage) => axios.get('http://127.0.0.1:4000/products-storage/' + storage._id)
                     )).then(productsStorage => {
                         res.render('allProducts', {storages: productsStorage.map(products => products.data)});
                     });
@@ -28,14 +28,14 @@ module.exports = function (app) {
         });
     });
 
-    app.get('/all_products_js', function (req, res) {
+    app.get('/all-products-js', function (req, res) {
         Storage.find({}, function (err, storages) {
             if (err) {
                 res.render('error', {message: err.message});
                 return;
             } else {
                 try {
-                    Promise.all(storages.map((storage) => axios.get('http://127.0.0.1:4000/products_storage/' + storage._id)
+                    Promise.all(storages.map((storage) => axios.get('http://127.0.0.1:4000/products-storage/' + storage._id)
                     )).then(productsStorage => {
                         res.send(productsStorage.map(products => products.data));
                     });
@@ -48,13 +48,13 @@ module.exports = function (app) {
         });
     });
 
-    app.get('/products_storage/:id', function (req, res) { // вовзращает продукты и их количество на складах с введённым id
+    app.get('/products-storage/:id', function (req, res) { // вовзращает продукты и их количество на складах с введённым id
         Storage.findOne({_id: req.params.id}, async function (err, storage) {
             if (storage == undefined) {
                 res.send(err.message);
             } else {
                 try {
-                    Promise.all(storage.idRack.map((rack) => axios.get('http://127.0.0.1:4000/products_rack/' + rack._id)
+                    Promise.all(storage.idRack.map((rack) => axios.get('http://127.0.0.1:4000/products-rack/' + rack._id)
                     )).then(productsStorage => {
                         res.send({
                             idStorage: storage._id,
@@ -72,7 +72,7 @@ module.exports = function (app) {
     });
 
 
-    app.get('/products_rack/:id', function (req, res) {      // вовзращает продукты и их количество на стеллаже с введённым id
+    app.get('/products-rack/:id', function (req, res) {      // вовзращает продукты и их количество на стеллаже с введённым id
         Rack.findOne({_id: req.params.id}, function (err, rack) {
             if (rack == undefined) {
                 res.render('error', {message: "Стеллажа с таким id нет"});
@@ -82,7 +82,7 @@ module.exports = function (app) {
                     array[i] = product.idProduct;
                 });
                 const url = {
-                    uri: 'http://127.0.0.1:3000/get_list_products/',
+                    uri: 'http://127.0.0.1:3000/get-list-products/',
                     body: JSON.stringify({arr: array}),
                     method: 'GET',
                     headers: {'Content-Type': 'application/json'}
@@ -100,7 +100,7 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/append_product/', function (req, res) {
+    app.post('/append-product/', function (req, res) {
         let idStorage = req.body['storage_id'];
         let idRack = req.body['rack_id'];
         let idProduct = req.body['product_id'];
@@ -121,7 +121,7 @@ module.exports = function (app) {
                                             res.render('error', {message: err.message});
                                             return;
                                         }
-                                        res.redirect("http://127.0.0.1:4000/all_products");
+                                        res.redirect("http://127.0.0.1:4000/all-products");
                                     });
                             }
                         });
@@ -131,7 +131,7 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/reduce_product/', function (req, res) {
+    app.post('/reduce-product/', function (req, res) {
         let idStorage = req.body['storage_id'];
         let idRack = req.body['rack_id'];
         let idProduct = req.body['product_id'];
@@ -154,7 +154,7 @@ module.exports = function (app) {
                                                 res.render('error', {message: err.message});
                                                 return;
                                             }
-                                            res.redirect("http://127.0.0.1:4000/all_products");
+                                            res.redirect("http://127.0.0.1:4000/all-products");
                                         });
                                 } else if (count == 1) {
                                     Rack.update(
@@ -164,7 +164,7 @@ module.exports = function (app) {
                                                 res.render('error', {message: err.message});
                                                 return;
                                             }
-                                            res.redirect("http://127.0.0.1:4000/all_products");
+                                            res.redirect("http://127.0.0.1:4000/all-products");
                                         });
                                 }
                             }
@@ -175,10 +175,10 @@ module.exports = function (app) {
         });
     });
 
-    app.get('/products_names/:values', function (req, res) {      // вовзращает продукты с введёнными значениями
+    app.get('/products-names/:values', function (req, res) {      // вовзращает продукты с введёнными значениями
         let array = req.params.values.split(',');
         const url = {
-            uri: 'http://127.0.0.1:3000/get_list_products_arr/',
+            uri: 'http://127.0.0.1:3000/get-list-products-arr/',
             body: JSON.stringify({arr: array}),
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
@@ -189,12 +189,11 @@ module.exports = function (app) {
             products.forEach(function (product, i, products) {
                 productsRack[i] = product;
             });
-            //res.render('filtrProducts', {products: productsRack, filters: array});
             res.send(productsRack);
         });
     });
 
-    app.post('/add_storage', function (req, res) {
+    app.post('/add-storage', function (req, res) {
         let nameStorage = req.body['name_storage'];
         var newStorage = new Storage({name: nameStorage, idRack: []});
         newStorage.save(function (err) {
@@ -202,11 +201,11 @@ module.exports = function (app) {
                 res.render('error', {message: err.message});
                 return;
             }
-            res.redirect("http://127.0.0.1:4000/all_products")
+            res.redirect("http://127.0.0.1:4000/all-products")
         });
     });
 
-    app.post('/add_rack', function (req, res) {
+    app.post('/add-rack', function (req, res) {
         let typeRack = req.body['type_rack'];
         let idStorage = req.body['storage_id'];
         var newRack = new Rack({type: typeRack, products: []});
@@ -224,16 +223,57 @@ module.exports = function (app) {
                     res.render('error', {message: err.message});
                     return;
                 }
-                res.redirect("http://127.0.0.1:4000/all_products")
+                res.redirect("http://127.0.0.1:4000/all-products")
             });
         });
     });
 
-    app.post('/delete_rack', function (req, res) {
+    app.post('/delete-rack', function (req, res) {
         let idRack = req.body['rack_id'];
         let idStorage = req.body['storage_id'];
-        console.log('vvv' + idRack);
-        Storage.updateOne({_id: idStorage, "idRack": idRack}, {$pop: {"idRack": 1}}
+        console.log('vvv ' + idRack);
+        Rack.remove({_id: idRack}, function (err) {
+            if (err) {
+                res.render('error', {message: err.message});
+                console.log(err.message);
+                return;
+            }
+            console.log('zzz');
+            let promise = new Promise(function(resolve, reject) {
+                console.log('ccc')
+                Storage.update(
+                    { _id : idStorage, "idRack": idRack },
+                    { $pull : { idRack : idRack } }
+                );
+            }).then(
+                function(result) { console.log(123) },
+                function(error) {  res.render('error', {message: "Error"});}
+            );
+            /*Storage.update(
+                {_id: idStorage},
+                {$pop: {idRack: idRack}}, function () {
+                    if (err) {
+                        res.render('error', {message: err.message});
+                        return;
+                    }
+                    console.log('ccc');
+                    //res.redirect("http://127.0.0.1:4000/all-products");
+                });*/
+
+            /*Storage.updateOne({_id: idStorage, "idRack": idRack}, {$pop: {"idRack": 1}},
+                function(err){
+                    if (err) {
+                        res.render('error', {message: err.message});
+                        return;
+                    }
+                    else{
+                        console.log('ccc');
+                        //res.redirect("http://127.0.0.1:4000/all-products");
+                    }
+                });*/
+
+        });
+        /*Storage.updateOne({_id: idStorage, "idRack": idRack}, {$pop: {"idRack": 1}}
             , function (err) {
                 if (err) {
                     res.render('error', {message: err.message});
@@ -247,32 +287,31 @@ module.exports = function (app) {
                             return;
                         } else {
                             console.log('aaa' + idRack);
-                            res.redirect("http://127.0.0.1:4000/all_products")
+                            res.redirect("http://127.0.0.1:4000/all-products")
                         }
                     });
                 }
-            });
+            });*/
     });
 
 
-    app.post('/delete_storage', function (req, res) {
+    app.post('/delete-storage', function (req, res) {
         let idStorage = req.body['storage_id'];
-        console.log('vvv' + idRack);
         Storage.remove({_id: idStorage}, function (err) {
             if (err) {
                 res.render('error', {message: err.message});
                 console.log(err.message);
                 return;
             }
-            res.redirect("http://127.0.0.1:4000/all_products")
+            res.redirect("http://127.0.0.1:4000/all-products")
         });
     });
 
-    app.post('/add_product', function (req, res) {
+    app.post('/add-product', function (req, res) {
         let idRack = req.body['rack_id'];
         let idStorage = req.body['storage_id'];
         let typeRack = req.body['type_rack'];
-        request('http://127.0.0.1:4000/products_names/' + typeRack, function (err, res2, body) {
+        request('http://127.0.0.1:4000/products-names/' + typeRack, function (err, res2, body) {
             if (err) {
                 res2.render('error', {message: err.message});
                 return;
@@ -288,10 +327,9 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/rack/:id/add_old_product', function (req, res) {
+    app.post('/rack/:id/add-old-product', function (req, res) {
         let chbox = req.body;
         let idRack = req.params.id;
-        //let typeRack = req.body['type_rack'];
         Object.keys(chbox).forEach(function (product) {
             Rack.updateOne({_id: idRack}, {
                 $push: {
@@ -302,19 +340,19 @@ module.exports = function (app) {
                     res.render('error', {message: err.message});
                     return;
                 }
-                res.redirect("http://127.0.0.1:4000/all_products")
+                res.redirect("http://127.0.0.1:4000/all-products")
             });
         })
     });
 
-    app.post('/add_new_product', function (req, res) {
+    app.post('/add-new-product', function (req, res) {
         let article = req.body.article;
         let type = req.body.type;
         let name = req.body.name;
         let trademark = req.body.trademark;
         let idRack = req.body.idRack
         const url = {
-            uri: 'http://127.0.0.1:3000/add_product_storage/',
+            uri: 'http://127.0.0.1:3000/add-product-storage/',
             body: JSON.stringify({article: article, type: type, name: name, trademark: trademark}),
             method: 'POST',
             headers: {'Content-Type': 'application/json'}
@@ -332,7 +370,7 @@ module.exports = function (app) {
                     res.render('error', {message: err.message});
                     return;
                 }
-                res.redirect("http://127.0.0.1:4000/all_products")
+                res.redirect("http://127.0.0.1:4000/all-products")
             });
         });
     });

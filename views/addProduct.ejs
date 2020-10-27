@@ -6,7 +6,7 @@
 </head>
 <body>
 <%- include ('blocks/header.ejs') -%>
-<form action="/rack/<%= idRack %>/add_old_product/" method="post"> // добавить отмеченные продукты
+<form action="/rack/<%= idRack %>/add-old-product/" method="post"> // добавить отмеченные продукты
     <h1>Добавить существующий продукт на стеллаж <%= typeRack %></h1>
     <% products.forEach(function(product, i, products) { %>
         <label class="container" > <%= product.name %>
@@ -18,7 +18,7 @@
 </form>
 
 <h1>Добавить новый продукт</h1>
-<form action="/add_new_product" method="post"> // создать продукт в каталоге и добавить на склад на стеллаж
+<form action="/add-new-product" method="post"> // создать продукт в каталоге и добавить на склад на стеллаж
     <label>Артикул</label><br>
     <input type="text" name="article"/><br><br>
     <label>Тип</label><br>
