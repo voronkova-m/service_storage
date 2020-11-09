@@ -10,7 +10,7 @@ var schema = new Schema({
         {
             idProduct: mongoose.Schema.Types.ObjectId,
             countProduct: {
-                type: Number,
+                type: Number
             }
         }
     ]
